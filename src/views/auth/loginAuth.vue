@@ -1,5 +1,6 @@
 <template>
-	<div>
+	<div class="reg">
+		<div class="title">Tizimga kirish</div>
 		<el-form
 			ref="reg"
 			:model="user"
@@ -13,6 +14,9 @@
 			<el-form-item label="Parolni kiriting" prop="password">
 				<el-input v-model="user.password" show-password />
 			</el-form-item>
+			<router-link to="/reg"
+				>Akkauntingiz yo'qmi ? Ro'yxatdan o'ting</router-link
+			>
 			<el-button type="success" @click="toLogin(reg)">Kirish</el-button>
 		</el-form>
 	</div>

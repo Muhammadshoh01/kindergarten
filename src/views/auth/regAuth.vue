@@ -1,15 +1,21 @@
 <template>
-	<div>
-		<el-form ref="reg" :model="user" :rules="rules" label-position="top">
+	<div class="reg">
+		<div class="title">Ro'yxatdan o'tish</div>
+		<el-form
+			ref="reg"
+			:model="user"
+			:rules="rules"
+			label-position="top"
+			@submit.prevent="registr(reg)"
+		>
 			<el-form-item label="Loginni kiriting" prop="login">
 				<el-input v-model="user.login" />
 			</el-form-item>
 			<el-form-item label="Parolni kiriting" prop="password">
 				<el-input v-model="user.password" show-password />
 			</el-form-item>
-			<el-button type="success" @click="registr(reg)"
-				>Ro'yxatdan o'tish</el-button
-			>
+			<router-link to="/login">Akkauntingiz bormi ?</router-link>
+			<el-button type="success" @click="registr(reg)">Kiritish</el-button>
 		</el-form>
 	</div>
 </template>

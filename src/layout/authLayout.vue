@@ -1,9 +1,11 @@
 <template>
-	<div>
+	<div class="auth">
 		<router-view></router-view>
 	</div>
 </template>
 
 <script setup></script>
 
-<style></style>
+<style lang="scss">
+@import '@/styles/views/auth.scss';
+</style>
