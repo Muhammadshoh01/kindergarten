@@ -1,6 +1,8 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useApiStore } from '../helpers/api'
+import { ElMessage } from 'element-plus'
+import router from '../../router'
 
 export const useAuthStore = defineStore('auth', () => {
 	const apiStore = useApiStore()
@@ -12,8 +14,13 @@ export const useAuthStore = defineStore('auth', () => {
 			url: 'auth/reg',
 			data: payload,
 		})
-		if (res.status == 200) {
-			console.log(res.data)
+		if (res.status == 201) {
+			ElMessage({
+				type: 'success',
+				message:
+					"Muvaffaqiyatli ro'yxatdan o'tdingiz.Iltimos tizimga login va parolingiz bilan kiring !",
+			})
+			router.push({ name: 'login' })
 		}
 	}
 
@@ -22,7 +29,7 @@ export const useAuthStore = defineStore('auth', () => {
 			url: 'auth/login',
 			data: payload,
 		})
-		if (res.status == 200) {
+		if (res.status == 201) {
 			console.log(res.data)
 		}
 	}

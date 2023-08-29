@@ -25,6 +25,11 @@ const router = createRouter({
 					name: 'reg',
 					component: () => import('@/views/auth/regAuth.vue'),
 				},
+				{
+					path: '/login',
+					name: 'login',
+					component: () => import('@/views/auth/loginAuth.vue'),
+				},
 			],
 		},
 	],

@@ -7,13 +7,16 @@
 			<el-form-item label="Parolni kiriting" prop="password">
 				<el-input v-model="user.password" show-password />
 			</el-form-item>
-			<el-button type="success" @click="registr(reg)">Kiritish</el-button>
+			<el-button type="success" @click="registr(reg)"
+				>Ro'yxatdan o'tish</el-button
+			>
 		</el-form>
 	</div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { useAuthStore } from '@/stores/user/auth'
 const user = ref({})
 const reg = ref()
 const rules = ref({
@@ -28,11 +31,16 @@ const rules = ref({
 		},
 	],
 })
+const authStore = useAuthStore()
+
 const registr = async (formEl) => {
 	if (!formEl) return
 	await formEl.validate((valid, fields) => {
 		if (valid) {
-			console.log('submit!')
+			authStore.registration({
+				login: user.value.login,
+				password: user.value.password,
+			})
 		} else {
 			console.log('error submit!', fields)
 		}

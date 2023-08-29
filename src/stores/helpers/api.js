@@ -1,4 +1,4 @@
-import { axios } from 'axios'
+import axios from 'axios'
 import { defineStore } from 'pinia'
 import { useHelperStore } from '.'
 import { useTokenStore } from '../user/token'
@@ -17,7 +17,7 @@ export const useApiStore = defineStore('api', () => {
 			.catch((e) => {
 				ElMessage({
 					type: 'error',
-					message: e.response.data,
+					message: e.response.data?.message,
 				})
 			})
 	}
@@ -28,7 +28,7 @@ export const useApiStore = defineStore('api', () => {
 			.catch((e) => {
 				ElMessage({
 					type: 'error',
-					message: e.response.data,
+					message: e.response.data?.message,
 				})
 			})
 	}
@@ -39,7 +39,7 @@ export const useApiStore = defineStore('api', () => {
 			.catch((e) => {
 				ElMessage({
 					type: 'error',
-					message: e.response.data,
+					message: e.response.data?.message,
 				})
 			})
 	}
@@ -50,7 +50,7 @@ export const useApiStore = defineStore('api', () => {
 			.catch((e) => {
 				ElMessage({
 					type: 'error',
-					message: e.response.data,
+					message: e.response.data?.message,
 				})
 			})
 	}
