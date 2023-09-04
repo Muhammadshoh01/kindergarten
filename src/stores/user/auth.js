@@ -44,18 +44,39 @@ export const useAuthStore = defineStore('auth', () => {
 		}
 	}
 
+	const logout = () => {
+		tokenStore.setToken('')
+		setUser({})
+		cookies.remove("bog'cha-token")
+		cookies.remove("bog'cha user")
+
+		router.push({ name: 'login' })
+		ElMessage({
+			type: 'warning',
+			message: 'Tizimdan chiqdingiz',
+		})
+	}
+
 	const checkUser = async () => {
 		if (cookies.isKey("bog'cha-token")) {
-			console.log('success')
 			tokenStore.setToken(cookies.get("bog'cha-token"))
 		}
 		let res = await apiStore.getAxios({
 			url: 'auth/checkUser',
 		})
 		if (res?.status == 200) {
-			setUser(res.data)
+			console.log(res.data)
+			user.value = res.data
+			cookies.set("bog'cha user", res.data)
 		}
 	}
 
-	return { user, registration, login, setUser, checkUser }
+	const checkLogin = async (payload) => {
+		return await apiStore.postAxios({
+			url: 'auth/checkLogin',
+			data: payload,
+		})
+	}
+
+	return { user, registration, login, setUser, checkUser, checkLogin, logout }
 })

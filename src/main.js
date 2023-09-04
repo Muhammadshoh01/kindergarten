@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { vMaska } from 'maska'
 
 import VueCookies from 'vue-cookies'
 import ElementPlus from 'element-plus'
@@ -14,6 +15,7 @@ const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 	app.component(key, component)
 }
+app.directive('maska', vMaska)
 
 app.use(createPinia())
 app.use(router)

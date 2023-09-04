@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 // import HomeView from '../views/HomeView.vue'
 import { useAuthStore } from '../stores/user/auth'
+import { menuLink } from './menu'
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,13 +10,7 @@ const router = createRouter({
 			path: '/',
 			redirect: '/dashboard',
 			component: () => import('@/layout/mainLayout.vue'),
-			children: [
-				{
-					path: '/dashboard',
-					name: 'dashboard',
-					component: () => import('@/views/dashboardPage.vue'),
-				},
-			],
+			children: menuLink,
 		},
 		{
 			path: '/',
@@ -37,7 +32,6 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-	console.log(to.name)
 	if (['login', 'reg'].includes(to.name)) {
 		next()
 	} else {

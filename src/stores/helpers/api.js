@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import { useHelperStore } from '.'
 import { useTokenStore } from '../user/token'
 import { ElMessage } from 'element-plus'
@@ -10,12 +10,11 @@ export const useApiStore = defineStore('api', () => {
 	const { url } = helperStore
 
 	const tokenStore = useTokenStore()
-	// const { header } = tokenStore
+	const { header } = storeToRefs(tokenStore)
 
 	const getAxios = async (payload) => {
-		console.log({ ...tokenStore.header })
 		return await axios
-			.get(`${url}/${payload.url}`, { ...tokenStore.header })
+			.get(`${url}/${payload.url}`, { ...header.value })
 			.catch((e) => {
 				if (e.response?.status == 401) {
 					router.push({ name: 'login' })
@@ -30,7 +29,7 @@ export const useApiStore = defineStore('api', () => {
 
 	const postAxios = async (payload) => {
 		return await axios
-			.post(`${url}/${payload.url}`, payload.data, { ...tokenStore.header })
+			.post(`${url}/${payload.url}`, payload.data, { ...header.value })
 			.catch((e) => {
 				ElMessage({
 					type: 'error',
@@ -41,7 +40,7 @@ export const useApiStore = defineStore('api', () => {
 
 	const putAxios = async (payload) => {
 		return await axios
-			.put(`${url}/${payload.url}`, payload.data, { ...tokenStore.header })
+			.put(`${url}/${payload.url}`, payload.data, { ...header.value })
 			.catch((e) => {
 				ElMessage({
 					type: 'error',
@@ -52,7 +51,7 @@ export const useApiStore = defineStore('api', () => {
 
 	const deleteAxios = async (payload) => {
 		return await axios
-			.get(`${url}/${payload.url}`, { ...tokenStore.header })
+			.delete(`${url}/${payload.url}`, { ...header.value })
 			.catch((e) => {
 				ElMessage({
 					type: 'error',
@@ -61,5 +60,20 @@ export const useApiStore = defineStore('api', () => {
 			})
 	}
 
-	return { getAxios, putAxios, postAxios, deleteAxios }
+	const downloadFile = (link) => {
+		axios({
+			url: `${url}/${link}`,
+			method: 'GET',
+			responseType: 'blob',
+		}).then((response) => {
+			let fileUrl = window.URL.createObjectURL(new Blob([response.data]))
+			let fileLink = document.createElement('a')
+			fileLink.href = fileUrl
+			fileLink.setAttribute('download', link)
+			document.body.append(fileLink)
+			fileLink.click()
+		})
+	}
+
+	return { getAxios, putAxios, postAxios, deleteAxios, downloadFile }
 })
