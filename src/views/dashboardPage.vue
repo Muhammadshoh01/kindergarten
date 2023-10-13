@@ -1,5 +1,5 @@
 <template>
-	<div>dashboard</div>
+	<div>Bosh sahifa</div>
 </template>
 
 <script setup></script>

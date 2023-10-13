@@ -40,7 +40,6 @@ export const useAuthStore = defineStore('auth', () => {
 		if (res.status == 200) {
 			setUser(res.data.user)
 			tokenStore.setToken(res.data.token)
-			console.log(res.data)
 		}
 	}
 
@@ -65,7 +64,6 @@ export const useAuthStore = defineStore('auth', () => {
 			url: 'auth/checkUser',
 		})
 		if (res?.status == 200) {
-			console.log(res.data)
 			user.value = res.data
 			cookies.set("bog'cha user", res.data)
 		}

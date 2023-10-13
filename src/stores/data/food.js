@@ -1,11 +1,14 @@
 import { defineStore } from 'pinia'
 import { useApiStore } from '../helpers/api'
+import { usePriceprodStore } from './price'
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
 export const useFoodStore = defineStore('food', () => {
 	const foods = ref([])
 	const foodsCount = ref(0)
+
+	const priceprodStore = usePriceprodStore()
 
 	const apiStore = useApiStore()
 	const { getAxios, postAxios, putAxios, deleteAxios } = apiStore
@@ -16,8 +19,17 @@ export const useFoodStore = defineStore('food', () => {
 			url: 'food',
 		})
 		if (res.status == 200) {
+			foods.value = [
+				...res.data.foods.map((food) => {
+					food.products.map((product) => {
+						product.unit =
+							priceprodStore.units[product.id.unit] || product.id.unit
+						return product
+					})
+					return food
+				}),
+			]
 			console.log(res.data)
-			foods.value = [...res.data.foods]
 			foodsCount.value = res.data.count
 		}
 	}

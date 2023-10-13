@@ -2,10 +2,27 @@
 	<div>
 		<el-table :data="foods">
 			<el-table-column type="index" label="N" />
-			<el-table-column prop="product.title" label="Mahsulot nomi" />
-			<el-table-column prop="price" label="Mahsulot narxi">
+			<el-table-column prop="title" label="Ovqat nomi" />
+			<el-table-column prop="price" label="Ovqat narxi">
 				<template #default="scope">
-					{{ scope.row.price.toLocaleString() || '0' }} so'm
+					{{ scope.row.price?.toLocaleString() || '0' }} so'm
+				</template>
+			</el-table-column>
+			<el-table-column label="Ovqat tarkibi">
+				<template #default="scope">
+					<el-popover placement="right" :width="400" trigger="click">
+						<template #reference>
+							<el-button style="margin-right: 16px">Ro'yxat</el-button>
+						</template>
+						<el-table :data="scope.row.products">
+							<el-table-column property="id.title" label="Mahsulot nomi" />
+							<el-table-column label="Mahsulot miqdori">
+								<template #default="scope">
+									<div>{{ scope.row.netto }} {{ scope.row.unit }}</div>
+								</template>
+							</el-table-column>
+						</el-table>
+					</el-popover>
 				</template>
 			</el-table-column>
 			<el-table-column prop="status" label="Mahsulot holati">

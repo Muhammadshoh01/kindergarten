@@ -1,6 +1,10 @@
 <template>
 	<header class="header">
-		<div class="logo">LOGO</div>
+		<div class="logo">
+			<router-link to="/">
+				<img src="../../assets/food.jpg" />
+			</router-link>
+		</div>
 		<el-popconfirm title="Tizimdan chiqmoqchimisiz?" @confirm="exit">
 			<template #reference>
 				<el-button type="danger">

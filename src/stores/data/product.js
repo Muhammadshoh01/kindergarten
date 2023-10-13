@@ -28,7 +28,6 @@ export const useProductStore = defineStore('product', () => {
 			url: 'product/active',
 		})
 		if (res.status == 200) {
-			console.log(res.data)
 			products.value = [...res.data]
 		}
 	}

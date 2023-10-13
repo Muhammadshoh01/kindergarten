@@ -8,6 +8,11 @@ export const usePriceprodStore = defineStore('priceprod', () => {
 	const priceprods = ref([])
 	const priceprodsCount = ref(0)
 
+	const units = {
+		kg: 'gr',
+		l: 'ml',
+	}
+
 	const apiStore = useApiStore()
 	const { getAxios, postAxios, putAxios, deleteAxios } = apiStore
 
@@ -18,11 +23,11 @@ export const usePriceprodStore = defineStore('priceprod', () => {
 			search,
 		})
 		if (res.status == 200) {
-			console.log(res.data)
 			priceprods.value = [
-				...res.data.priceProducts.map((product) => {
-					product.data = convertDate(product.data)
-					return product
+				...res.data.priceProducts.map((item) => {
+					item.data = convertDate(item.data)
+					item.product.miniunit = units[item.product.unit] || item.product.unit
+					return item
 				}),
 			]
 
@@ -117,6 +122,7 @@ export const usePriceprodStore = defineStore('priceprod', () => {
 	return {
 		priceprods,
 		priceprodsCount,
+		units,
 		GET_ALL_PRICEPRODS,
 		ADD_NEW_PRICEPROD,
 		GET_PRICEPROD,

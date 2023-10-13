@@ -27,4 +27,18 @@ export const menuLink = [
 		icon: 'bowl',
 		component: () => import('@/views/foods/foodPage.vue'),
 	},
+	{
+		path: '/time',
+		name: 'time',
+		title: 'Ovqat vaqtlari',
+		icon: 'fork-spoon',
+		component: () => import('@/views/timePage.vue'),
+	},
+	{
+		path: '/menu',
+		name: 'menu',
+		title: 'Menyu',
+		icon: 'memo',
+		component: () => import('@/views/menu/menuPage.vue'),
+	},
 ]

@@ -20,11 +20,12 @@
 			</el-form-item>
 			<el-row :gutter="30" v-for="(item, index) in food.products" :key="index">
 				<el-col :span="12">
-					<el-form-item label="Mahsulotni tanlang">
+					<el-form-item :label="index == 0 ? 'Mahsulotni tanlang' : ''">
 						<el-select
 							v-model="item.id"
 							class="w-full"
 							placeholder="Ro'yxatdan tanlang"
+							@change="setChange(item.id, index)"
 						>
 							<el-option
 								v-for="(item, index) in priceprods"
@@ -36,18 +37,22 @@
 					</el-form-item>
 				</el-col>
 				<el-col :span="12">
-					<el-form-item label="Mahsulot nettosi">
+					<el-form-item :label="index == 0 ? 'Mahsulot nettosi' : ''">
 						<el-input
 							class="w-full"
 							v-maska
 							data-maska="####"
 							v-model="item.netto"
+							@input="calc"
 						>
-							<template #append>gr</template>
+							<template #append>{{ item.append }}</template>
 						</el-input>
 					</el-form-item>
 				</el-col>
 			</el-row>
+			<h3 v-if="food.price">
+				Umumiy summa {{ food.price?.toLocaleString() }} so'm
+			</h3>
 		</el-form>
 
 		<template #footer>
@@ -63,7 +68,6 @@
 import { ref, watch, onMounted } from 'vue'
 import { useDialogStore } from '../../stores/useful/dialog'
 import { useFoodStore } from '../../stores/data/food'
-// import { useProductStore } from '@/stores/data/product'
 import { usePriceprodStore } from '../../stores/data/price'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
@@ -73,10 +77,6 @@ const props = defineProps(['title', 'id'])
 const priceprodStore = usePriceprodStore()
 const { GET_ALL_PRICEPRODS } = priceprodStore
 const { priceprods } = storeToRefs(priceprodStore)
-
-// const productStore = useProductStore()
-// const { GET_ALL_ACTIVE_PRODUCTS } = productStore
-// const { products } = storeToRefs(productStore)
 
 const dialogStore = useDialogStore()
 const { toggle, editToggle } = storeToRefs(dialogStore)
@@ -95,15 +95,8 @@ const food = ref({
 })
 const foodForm = ref()
 const rules = ref({
-	product: [
-		{ required: true, message: 'Mahsulot nomini tanlang', trigger: 'change' },
-	],
-	price: [
-		{
-			required: true,
-			message: 'Mahsulot narxini kiriting',
-			trigger: 'change',
-		},
+	title: [
+		{ required: true, message: 'Ovqat nomini kiriting', trigger: 'blur' },
 	],
 })
 
@@ -111,6 +104,10 @@ const add = async (formEl) => {
 	if (!formEl) return
 	await formEl.validate((valid) => {
 		if (valid) {
+			food.value.products = food.value.products.filter((item) => {
+				if (item.id == '' || item.netto <= 0) return false
+				return item
+			})
 			if (editToggle.value) {
 				UPDATE_FOOD(food.value)
 			} else {
@@ -127,7 +124,47 @@ const add = async (formEl) => {
 const handleClose = () => {
 	setToggle(false)
 	setEditToggle(false)
-	food.value = {}
+	food.value = {
+		products: [
+			{
+				id: '',
+				netto: 0,
+			},
+		],
+	}
+}
+
+const setChange = (_id, index) => {
+	let item = priceprods.value.find((prod) => {
+		return prod.product._id == _id
+	})
+	food.value.products[index].append = item.product.miniunit
+	food.value.products[index].price =
+		item.product.unit == item.product.miniunit ? item.price : item.price / 1000
+}
+
+// const getChange = () => {
+// 	food.value.products.forEach((item) => {
+// 		return item
+// 	})
+// }
+
+const calc = () => {
+	food.value.products = food.value.products.filter((item) => {
+		if (item.id == '' || item.netto <= 0) return false
+		return item
+	})
+	food.value.price = 0
+	food.value.products.forEach((item) => {
+		food.value.price += item.netto * item.price
+	})
+
+	if (food.value.products.at(-1).id && food.value.products.at(-1).netto > 0) {
+		food.value.products.push({
+			id: '',
+			netto: 0,
+		})
+	}
 }
 
 onMounted(() => {
@@ -139,7 +176,8 @@ watch(editToggle, async () => {
 		await GET_FOOD(props.id).then((res) => {
 			console.log(res.data)
 			food.value = { ...res.data }
-			food.value.product = food.value.product.title
+			// calc()
+			// getChange()
 		})
 	}
 })
